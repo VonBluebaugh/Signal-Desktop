@@ -110,15 +110,18 @@
   window.autoOrientImage = autoOrientImage;
 
   // ES2015+ modules
+  const attachmentsPath = Attachments.getPath(app.getPath('userData'));
+  const readAttachmentData = Attachments.readData(attachmentsPath);
+  const writeAttachmentData = Attachments.writeData(attachmentsPath);
+
   window.Signal = window.Signal || {};
   window.Signal.Logs = require('./js/modules/logs');
   window.Signal.OS = require('./js/modules/os');
   window.Signal.Migrations = window.Signal.Migrations || {};
-  const attachmentsPath = Attachments.getPath(app.getPath('userData'));
-  const { writeAttachmentData } = require('./app/types/attachment/write_attachment_data');
   // Injected context functions to keep `Message` agnostic from Electron:
   window.Signal.Migrations.context = {
-    writeAttachmentData: writeAttachmentData(attachmentsPath),
+    readAttachmentData,
+    writeAttachmentData,
   };
   window.Signal.Migrations.V17 = require('./js/modules/migrations/17');
   window.Signal.Types = window.Signal.Types || {};
